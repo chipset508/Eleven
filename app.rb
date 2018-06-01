@@ -1,5 +1,9 @@
 require 'sinatra'
 
 get '/' do
-  'works'
+  'yo bitch'
+end
+
+post '/new_comment' do
+  JSON.parse(params[:payload])
 end
