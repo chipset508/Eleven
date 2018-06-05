@@ -1,4 +1,7 @@
 require 'sinatra'
+require 'sinatra'
+require 'sinatra/activerecord'
+require '/models'
 
 get '/' do
   'yo bitch'
