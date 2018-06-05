@@ -17,8 +17,9 @@ ActiveRecord::Schema.define(version: 2018_06_05_083811) do
 
   create_table "pull_requests", force: :cascade do |t|
     t.string "url"
-    t.string "author"
-    t.string "slack_id"
+    t.string "author_id"
+    t.string "author_user_name"
+    t.string "thread_ts"
   end
 
 end
