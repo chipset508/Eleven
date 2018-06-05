@@ -1,12 +1,11 @@
 require 'sinatra'
 require 'sinatra'
 require 'sinatra/activerecord'
-require '/models'
 
 get '/' do
   'yo bitch'
 end
 
-post '/new_comment' do
+post '/new_pull_request' do
   JSON.parse(params[:payload])
 end
