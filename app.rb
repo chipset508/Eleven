@@ -6,6 +6,13 @@ require './models/github_comments.rb'
 require "uri"
 require 'dotenv/load'
 require 'slack-ruby-client'
+require "awesome_print"
+require './lib/create_github_comment.rb'
+
+
+before do
+  content_type 'application/json'
+end
 
 get '/' do
   'yo bitch'
@@ -27,13 +34,15 @@ post '/new_pull_request' do
         author_user_name:  author_user_name,
         thread_ts: thread_ts
       )
+      status 201
     end
   end
 end
 
 post '/new_comment' do
-  content = params
-  GithubComment.create(content: content)
+  content = JSON.parse(request.body.read)
+  CreateGithubComment.call(content)
+  status 201
 end
 
 get '/hi' do

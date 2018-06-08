@@ -13,6 +13,7 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     arel (9.0.0)
+    awesome_print (1.8.0)
     byebug (10.0.2)
     concurrent-ruby (1.0.5)
     dotenv (2.4.0)
@@ -63,6 +64,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
+  awesome_print
   byebug
   dotenv
   pg

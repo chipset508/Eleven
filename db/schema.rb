@@ -10,14 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_06_102235) do
+ActiveRecord::Schema.define(version: 2018_06_08_033207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
   create_table "github_comments", force: :cascade do |t|
-    t.string "content"
+    t.string "body"
+    t.string "html_url"
     t.boolean "status"
-    t.string "pr_url"
+    t.string "comment_status"
+    t.string "author_name"
   end
 
   create_table "pull_requests", force: :cascade do |t|
