@@ -28,19 +28,25 @@ class CreateGithubComment
     body = content['review']['body']
     html_url = content['review']['html_url']
     author_name = content['review']['user']['login']
+    pr_url = content['pull_request']['html_url']
+
     if body.present?
-      GithubComment.create(body: body, html_url: html_url, author_name: author_name)
+      GithubComment.create(body: body, html_url: html_url, author_name: author_name, pr_url: pr_url)
     end
   end
 
   def create_created_comment
-    created_content = content['comment'] || content['issue']
-    body = created_content['body']
-    html_url = created_content['html_url']
-    author_name = created_content['user']['login']
+    body = content['comment']['body']
+    html_url = content['comment']['html_url']
+    author_name = content['comment']['user']['login']
+    pr_url = if content['issue'].present?
+               content['issue']['pull_request']['html_url']
+             else
+               content['pull_request']['html_url']
+             end
 
     if body.present?
-      GithubComment.create(body: body, html_url: html_url, author_name: author_name)
+      GithubComment.create(body: body, html_url: html_url, author_name: author_name, pr_url: pr_url)
     end
   end
 end

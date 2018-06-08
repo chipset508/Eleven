@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_08_033207) do
+ActiveRecord::Schema.define(version: 2018_06_08_132051) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2018_06_08_033207) do
     t.boolean "status"
     t.string "comment_status"
     t.string "author_name"
+    t.string "pr_url"
   end
 
   create_table "pull_requests", force: :cascade do |t|
