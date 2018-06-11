@@ -1,14 +1,13 @@
 require 'sinatra'
-require 'sinatra'
 require 'sinatra/activerecord'
-require './models/pull_requests.rb'
-require './models/github_comments.rb'
 require "uri"
 require 'dotenv/load'
 require 'slack-ruby-client'
 require "awesome_print"
-require './lib/create_github_comment.rb'
 
+require 'require_all'
+require_all './app/models/'
+require_all './app/lib/'
 
 before do
   content_type 'application/json'
