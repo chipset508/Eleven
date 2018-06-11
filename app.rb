@@ -1,12 +1,9 @@
 require 'sinatra'
 require 'sinatra/activerecord'
 require "uri"
-require 'dotenv/load'
-require 'slack-ruby-client'
 require "awesome_print"
 
 require 'require_all'
-require_all './app/models/'
 require_all './app/lib/'
 
 before do
@@ -14,7 +11,7 @@ before do
 end
 
 get '/' do
-  'yo bitch'
+  'yo yo'
 end
 
 post '/new_pull_request' do
@@ -22,7 +19,7 @@ post '/new_pull_request' do
   urls= URI.extract(params['text'])
   author_user_name = params['user_name']
   author_id = params['user_id']
-  thread_ts = params['thread_ts']
+  thread_ts = params['timestamp']
   if urls
     urls.each do |url|
       next if URI(url).host != 'github.com'
@@ -31,7 +28,7 @@ post '/new_pull_request' do
         url: url,
         author_id: author_id,
         author_user_name:  author_user_name,
-        thread_ts: thread_ts
+        thread_ts: thread_ts,
       )
       status 201
     end
@@ -40,15 +37,8 @@ end
 
 post '/new_comment' do
   content = JSON.parse(request.body.read)
-  CreateGithubComment.call(content)
+  new_comment = CreateGithubComment.call(content)
+  SendSlackCommentService.call(new_comment.id) if new_comment
+
   status 201
-end
-
-get '/hi' do
-  Slack.configure do |config|
-    config.token = ENV['SLACK_API_TOKEN']
-  end
-  client = Slack::Web::Client.new(token: ENV['SLACK_API_TOKEN'])
-  client.chat_postMessage(channel: ENV['SLACK_CHANNEL'], text: 'Hello World', as_user: true, ts: '1528193018.000109')
-
 end

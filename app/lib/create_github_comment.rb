@@ -18,7 +18,7 @@ class CreateGithubComment
     when 'submitted'
       create_submitted_comment
     else
-
+      false
     end
   end
 
