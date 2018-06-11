@@ -27,8 +27,13 @@ class SendSlackCommentService
     client = Slack::Web::Client.new(token: ENV['SLACK_API_TOKEN'])
     client.chat_postMessage(
       channel: ENV['SLACK_CHANNEL'],
-      text: slack_comment,
-      color: RandomColor.call,
+      attachments: [
+      {
+        color: RandomColor.call,
+        pretext: slack_comment,
+        text: github_comment.body,
+      }
+    ],
       as_user: true,
       thread_ts: pull_request.thread_ts
     )

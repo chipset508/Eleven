@@ -22,8 +22,7 @@ class CreateSlackComment
   private
 
   def normal_comment
-    "<#{github_comment.html_url}|NEW COMMENT> #{mentions}\n\n" +
-     "#{body}"
+    "<#{github_comment.html_url}|NEW COMMENT> #{mentions}"
   end
 
   def mentions
