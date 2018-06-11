@@ -17,7 +17,7 @@ class SendSlackCommentService
 
   def call
     github_comment = GithubComment.find_by(id: @comment_id)
-    pull_request = PullRequest.find_by(url: github_comment.try(:pr_url))
+    pull_request = PullRequest.where(url: github_comment.try(:pr_url)).last
     return false unless github_comment && pull_request
 
     slack_comment = CreateSlackComment.call(github_comment)

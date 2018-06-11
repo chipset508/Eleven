@@ -1,5 +1,5 @@
 class CreateSlackComment
-  attr_accessor :github_comment
+  attr_accessor :github_comment, :body
 
   def self.call(github_comment)
     self.new(github_comment).call
@@ -7,6 +7,7 @@ class CreateSlackComment
 
   def initialize(github_comment)
     @github_comment = github_comment
+    @body = github_comment.body
   end
 
   def call
@@ -21,8 +22,17 @@ class CreateSlackComment
   private
 
   def normal_comment
-    "<@UAFMF4XG9>"+
-    "[<#{github_comment.html_url}|New comment added>]\n" +
-     "#{github_comment.body}"
+    "<#{github_comment.html_url}|NEW COMMENT> #{mentions}\n\n" +
+     "#{body}"
+  end
+
+  def mentions
+    github_mentions = body.split.uniq.select { |word| word.start_with?('@') }
+    github_mentions = github_mentions
+                        .map { |p| JSON.parse(ENV["USER_MAPPING"])[p] }
+                        .compact
+                        .join(' ')
+
+    github_mentions.present? ? "<#{github_mentions}>" : ''
   end
 end
