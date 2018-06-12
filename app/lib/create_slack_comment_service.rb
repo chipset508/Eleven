@@ -11,9 +11,11 @@ class CreateSlackComment
   end
 
   def call
-    case github_comment.comment_status
-    when 'created'
-
+    case github_comment.state
+    when 'approved'
+      approve_comment
+    when 'changes_requested'
+      change_requested_comment
     else
       normal_comment
     end
@@ -21,8 +23,19 @@ class CreateSlackComment
 
   private
 
+  def change_requested_comment
+    "<#{github_comment.html_url}|:x: #{github_comment.author_name}>" +
+    " #{mentions}"
+  end
+
+  def approve_comment
+    "<#{github_comment.html_url}|:white_check_mark: #{github_comment.author_name}>" +
+    " #{mentions}"
+  end
+
   def normal_comment
-    "<#{github_comment.html_url}|NEW COMMENT> #{mentions}"
+    "<#{github_comment.html_url}|:speech_balloon: #{github_comment.author_name}>" +
+    "#{mentions}"
   end
 
   def mentions
@@ -32,6 +45,6 @@ class CreateSlackComment
                         .compact
                         .join(' ')
 
-    github_mentions.present? ? "<#{github_mentions}>" : ''
+    github_mentions.present? ? ". cc <#{github_mentions}>" : ''
   end
 end

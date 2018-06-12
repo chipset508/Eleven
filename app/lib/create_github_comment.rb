@@ -27,12 +27,17 @@ class CreateGithubComment
   def create_submitted_comment
     body = content['review']['body']
     html_url = content['review']['html_url']
+    state = content['review']['state']
     author_name = content['review']['user']['login']
     pr_url = content['pull_request']['html_url']
 
-    if body.present?
-      GithubComment.create(body: body, html_url: html_url, author_name: author_name, pr_url: pr_url)
-    end
+    GithubComment.create(
+      body: body,
+      html_url: html_url,
+      author_name: author_name,
+      pr_url: pr_url,
+      state: state
+    )
   end
 
   def create_created_comment
