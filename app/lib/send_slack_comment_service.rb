@@ -14,10 +14,8 @@ class SendSlackCommentService
     return false unless github_comment && pull_request
 
     slack_comment = CreateSlackComment.call(github_comment)
-    # Slack.configure do |config|
-    #   config.token = ENV['SLACK_API_TOKEN']
-    # end
-    client = Slack::Web::Client.new(token: ENV['SLACK_API_TOKEN'])
+
+    client = Slack::Web::Client.new
     client.chat_postMessage(
       channel: ENV['SLACK_CHANNEL'],
       attachments: [
