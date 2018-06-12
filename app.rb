@@ -1,10 +1,4 @@
 require 'sinatra'
-require 'sinatra/activerecord'
-require "uri"
-require "awesome_print"
-
-require 'require_all'
-require_all './app/lib/'
 
 before do
   content_type 'application/json'

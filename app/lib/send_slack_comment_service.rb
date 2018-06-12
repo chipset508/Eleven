@@ -1,10 +1,3 @@
-require 'slack-ruby-client'
-require 'dotenv/load'
-
-require 'require_all'
-require_all './app/models/'
-require_all './app/lib/'
-
 class SendSlackCommentService
 
   def self.call(comment_id)
