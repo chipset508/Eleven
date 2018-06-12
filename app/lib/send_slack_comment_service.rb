@@ -20,7 +20,7 @@ class SendSlackCommentService
       channel: ENV['SLACK_CHANNEL'],
       attachments: [
       {
-        color: RandomColor.call,
+        color: ColorPickerService.by_state(github_comment.state),
         pretext: slack_comment,
         text: github_comment.body,
       }
