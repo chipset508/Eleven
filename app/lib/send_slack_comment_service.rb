@@ -13,7 +13,7 @@ class SendSlackCommentService
     pull_request = PullRequest.where(url: github_comment.try(:pr_url)).last
     return false unless github_comment && pull_request
 
-    slack_comment = CreateSlackComment.call(github_comment)
+    slack_comment_decorator = SlackCommentDecoratorService.new(github_comment)
 
     client = Slack::Web::Client.new
     client.chat_postMessage(
@@ -21,8 +21,8 @@ class SendSlackCommentService
       attachments: [
       {
         color: ColorPickerService.by_state(github_comment.state),
-        pretext: slack_comment,
-        text: github_comment.body,
+        pretext: slack_comment_decorator.title,
+        text: github_comment.body + slack_comment_decorator.mentions,
       }
     ],
       as_user: true,
