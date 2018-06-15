@@ -31,13 +31,15 @@ class CreateGithubComment
     author_name = content['review']['user']['login']
     pr_url = content['pull_request']['html_url']
 
-    GithubComment.create(
-      body: body,
-      html_url: html_url,
-      author_name: author_name,
-      pr_url: pr_url,
-      state: state
-    )
+    unless in_black_list?(author_name)
+      GithubComment.create(
+        body: body,
+        html_url: html_url,
+        author_name: author_name,
+        pr_url: pr_url,
+        state: state
+      )
+    end
   end
 
   def create_created_comment
@@ -50,8 +52,12 @@ class CreateGithubComment
                content['pull_request']['html_url']
              end
 
-    if body.present?
+    if body.present? && !in_black_list?(author_name)
       GithubComment.create(body: body, html_url: html_url, author_name: author_name, pr_url: pr_url)
     end
+  end
+
+  def in_black_list?(github_user)
+    ENV['USER_BLACK_LIST'].split(',').include?(github_user)
   end
 end
