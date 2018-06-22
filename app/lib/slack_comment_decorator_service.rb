@@ -22,9 +22,12 @@ class SlackCommentDecoratorService
     github_mentions = github_mentions
                         .map { |p| JSON.parse(ENV["USER_MAPPING"])[p] }
                         .compact
-                        .join(' ')
 
-    github_mentions.present? ? "\n\n cc <#{github_mentions}>" : ''
+    github_mentions.present? ? "\n\n cc #{mention_slack_format(github_mentions)}" : ''
+  end
+
+  def mention_slack_format(mentions)
+    mentions.map{ |s| "<#{s}>" }.join(' ')
   end
 
   private
