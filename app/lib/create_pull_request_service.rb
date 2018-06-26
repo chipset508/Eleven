@@ -38,7 +38,7 @@ class CreatePullRequestService
   private
 
   def valid_user(user_name)
-    ENV['BLACK_LIST_SLACK_USER'].split(',').include?(user_name)
+    !ENV['BLACK_LIST_SLACK_USER'].split(',').include?(user_name)
   end
 
   def valid_channel?(channel)
