@@ -58,6 +58,6 @@ class CreateGithubComment
   end
 
   def in_black_list?(github_user)
-    ENV['USER_BLACK_LIST'].split(',').include?(github_user)
+    ENV['BLACK_LIST_GITHUB_USER'].split(',').include?(github_user)
   end
 end

@@ -11,13 +11,12 @@ class CreatePullRequestService
   end
 
   def call
-    byebug
     channel = "##{params['channel_name']}"
+    author_user_name = params['user_name']
 
-    return unless valid_channel?(channel)
+    return unless valid_channel?(channel) && valid_user(author_user_name)
 
     urls= URI.extract(params['text'])
-    author_user_name = params['user_name']
     author_id = params['user_id']
     thread_ts = params['timestamp']
 
@@ -37,6 +36,10 @@ class CreatePullRequestService
   end
 
   private
+
+  def valid_user(user_name)
+    ENV['BLACK_LIST_SLACK_USER'].split(',').include?(user_name)
+  end
 
   def valid_channel?(channel)
     ENV['WHITELIST_SLACK_CHANNEL'].split(',').include?(channel)
