@@ -17,7 +17,7 @@ class SendSlackCommentService
 
     client = Slack::Web::Client.new
     client.chat_postMessage(
-      channel: ENV['SLACK_CHANNEL'],
+      channel: pull_request.channel,
       attachments: [
       {
         color: ColorPickerService.by_state(github_comment.state),
