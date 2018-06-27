@@ -23,6 +23,7 @@ class SendSlackCommentService
         color: ColorPickerService.by_state(github_comment.state),
         pretext: slack_comment_decorator.title,
         text: github_comment.body + slack_comment_decorator.mentions,
+        mrkdwn_in: ["pretext", "text", "fields"],
       }
     ],
       as_user: true,
