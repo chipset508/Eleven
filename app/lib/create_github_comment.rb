@@ -31,7 +31,7 @@ class CreateGithubComment
     author_name = content['review']['user']['login']
     pr_url = content['pull_request']['html_url']
 
-    unless in_black_list?(author_name)
+    unless in_black_list?(author_name) || (state == 'commented' && body.nil?)
       GithubComment.create(
         body: body,
         html_url: html_url,
