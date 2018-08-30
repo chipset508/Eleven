@@ -23,6 +23,7 @@ class CreatePullRequestService
     if urls
       urls.each do |url|
         next if URI(url).host != 'github.com'
+        url.chomp!("/")
 
         PullRequest.create(
           url: url.split('/files')[0],
