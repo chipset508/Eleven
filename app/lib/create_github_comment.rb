@@ -17,12 +17,32 @@ class CreateGithubComment
       create_created_comment
     when 'submitted'
       create_submitted_comment
+    when 'closed'
+      create_closed_comment
     else
       false
     end
   end
 
   private
+
+  def create_closed_comment
+    is_merged = content['pull_request']['merged']
+    html_url = content['pull_request']['html_url']
+    author_name = content['pull_request']['merged_by']['login']
+
+    if is_merged && !in_black_list?(author_name)
+      GithubComment.create(
+        body: '',
+        html_url: html_url,
+        author_name: author_name,
+        pr_url: html_url,
+        state: 'merged'
+      )
+    else
+      false
+    end
+  end
 
   def create_submitted_comment
     body = content['review']['body']
