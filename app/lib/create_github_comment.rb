@@ -29,9 +29,11 @@ class CreateGithubComment
   def create_closed_comment
     is_merged = content['pull_request']['merged']
     html_url = content['pull_request']['html_url']
-    author_name = content['pull_request']['merged_by']['login']
+    author_name = content['pull_request']['user']['login']
 
-    if is_merged && !in_black_list?(author_name)
+    return false if in_black_list?(author_name)
+
+    if is_merged
       GithubComment.create(
         body: '',
         html_url: html_url,
@@ -40,7 +42,13 @@ class CreateGithubComment
         state: 'merged'
       )
     else
-      false
+      GithubComment.create(
+        body: '',
+        html_url: html_url,
+        author_name: author_name,
+        pr_url: html_url,
+        state: 'closed'
+      )
     end
   end
 

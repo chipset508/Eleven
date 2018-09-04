@@ -14,6 +14,8 @@ class SlackCommentDecoratorService
       change_requested_comment
     when 'merged'
       merged_comment
+    when 'closed'
+      closed_comment
     else
       normal_comment
     end
@@ -43,6 +45,10 @@ class SlackCommentDecoratorService
   end
 
   private
+
+  def closed_comment
+    "<#{github_comment.html_url}|:closed_lock_with_key: #{github_comment.author_name}>"
+  end
 
   def merged_comment
     "<#{github_comment.html_url}|:lock: #{github_comment.author_name}>"

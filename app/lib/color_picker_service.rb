@@ -9,8 +9,10 @@ class ColorPickerService
       "#04B807"
     when 'changes_requested'
       "#E41308"
-    when 'closed'
+    when 'merged'
       "#6f42c1"
+    when 'closed'
+      "#E41308"
     else
       "#848484"
     end
