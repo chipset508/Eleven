@@ -16,6 +16,8 @@ class SlackCommentDecoratorService
       merged_comment
     when 'closed'
       closed_comment
+    when 'reopened'
+      reopened_comment
     else
       normal_comment
     end
@@ -45,6 +47,10 @@ class SlackCommentDecoratorService
   end
 
   private
+
+  def reopened_comment
+    "<#{github_comment.html_url}|:unlock: #{github_comment.author_name}>"
+  end
 
   def closed_comment
     "<#{github_comment.html_url}|:closed_lock_with_key: #{github_comment.author_name}>"
