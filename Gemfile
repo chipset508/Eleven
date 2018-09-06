@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'sinatra'
+gem 'sinatra', '~> 2.0.3'
 gem 'shotgun'
 gem 'dotenv'
 gem 'pg'
