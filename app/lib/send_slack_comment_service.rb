@@ -14,7 +14,7 @@ class SendSlackCommentService
     return false unless github_comment && pull_request
     puts github_comment.inspect
     puts pull_request.inspect
-    github_comment.update_attributes(thread_ts: pull_request.thread_ts)
+    github_comment.update(thread_ts: pull_request.thread_ts)
 
     slack_comment_decorator = SlackCommentDecoratorService.new(github_comment)
 
