@@ -51,7 +51,7 @@ class SlackCommentDecoratorService
   private
 
   def comment_subscription
-    return '' unless github_comment.first_comment_in_thread?
+    return '' if !github_comment.first_comment_in_thread? || github_comment.author_of_thread?
 
     subscribe_user = JSON.parse(ENV["USER_MAPPING"])["@#{github_comment.author_name}"]
     return "\n\n <#{subscribe_user}> subscribed to this thread" if subscribe_user
