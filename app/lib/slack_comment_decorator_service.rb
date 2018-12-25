@@ -1,9 +1,10 @@
 class SlackCommentDecoratorService
-  attr_accessor :github_comment, :body
+  attr_accessor :github_comment, :body, :subscription
 
   def initialize(github_comment)
     @github_comment = github_comment
     @body = github_comment.body
+    @subscription = ''
   end
 
   def title
@@ -20,6 +21,7 @@ class SlackCommentDecoratorService
       reopened_comment
     else
       normal_comment
+      subscription = comment_subscription
     end
   end
 
@@ -47,6 +49,13 @@ class SlackCommentDecoratorService
   end
 
   private
+
+  def comment_subscription
+    return unless github_comment.first_comment_in_thread?
+
+    subscribe_user = JSON.parse(ENV["USER_MAPPING"])[github_comment.author_name]
+    "\n\n <#{subscribe_user}> subscribed to this thread" if subscribe_user
+  end
 
   def reopened_comment
     "<#{github_comment.html_url}|:unlock: #{github_comment.author_name}>"
