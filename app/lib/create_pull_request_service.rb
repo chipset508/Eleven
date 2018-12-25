@@ -1,4 +1,3 @@
-require 'logger'
 class CreatePullRequestService
 
   attr_reader :params
@@ -16,8 +15,6 @@ class CreatePullRequestService
     author_user_name = params['user_name']
 
     return unless valid_channel?(channel) && valid_user(author_user_name)
-    logger.info 'hoho'
-    logger.info urls
 
     urls= URI.extract(params['text'])
     author_id = params['user_id']
