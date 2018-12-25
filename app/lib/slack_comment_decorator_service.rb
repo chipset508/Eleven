@@ -20,8 +20,8 @@ class SlackCommentDecoratorService
     when 'reopened'
       reopened_comment
     else
+      @subscription = comment_subscription
       normal_comment
-      subscription = comment_subscription
     end
   end
 
@@ -51,10 +51,12 @@ class SlackCommentDecoratorService
   private
 
   def comment_subscription
-    return unless github_comment.first_comment_in_thread?
+    return '' unless github_comment.first_comment_in_thread?
 
     subscribe_user = JSON.parse(ENV["USER_MAPPING"])["@#{github_comment.author_name}"]
-    "\n\n <#{subscribe_user}> subscribed to this thread" if subscribe_user
+    return "\n\n <#{subscribe_user}> subscribed to this thread" if subscribe_user
+
+    ''
   end
 
   def reopened_comment
