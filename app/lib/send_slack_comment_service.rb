@@ -13,6 +13,8 @@ class SendSlackCommentService
     pull_request = PullRequest.where(url: github_comment.try(:pr_url)).last
     return false unless github_comment && pull_request
 
+    github_comment.update_attributes(thread_ts: pull_request.thread_ts)
+
     slack_comment_decorator = SlackCommentDecoratorService.new(github_comment)
 
     client = Slack::Web::Client.new
