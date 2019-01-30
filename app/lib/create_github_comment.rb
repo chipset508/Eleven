@@ -92,7 +92,8 @@ class CreateGithubComment
     html_url = content['comment']['html_url']
     author_name = content['comment']['user']['login']
     pr_url = if content['issue'].present?
-               content['issue']['pull_request']['html_url']
+               content.dig('issue', 'pull_request', 'html_url') ||
+                 content.dig('issue', 'html_url')
              else
                content['pull_request']['html_url']
              end
