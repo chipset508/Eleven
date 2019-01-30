@@ -29,32 +29,32 @@ class CreateGithubComment
   private
 
   def create_reopened_comment
-    html_url = content['pull_request']['html_url']
-    author_name = content['pull_request']['user']['login']
+    html_url = content.dig('pull_request', 'html_url') || content.dig('issue', 'html_url')
+    action_by = content.dig('pull_request', 'user', 'login') || content.dig('sender', 'login')
 
-    return false if in_black_list?(author_name)
+    return false if in_black_list?(action_by)
 
     GithubComment.create(
       body: '',
       html_url: html_url,
-      author_name: author_name,
+      author_name: action_by,
       pr_url: html_url,
       state: 'reopened'
     )
   end
 
   def create_closed_comment
-    is_merged = content['pull_request']['merged']
-    html_url = content['pull_request']['html_url']
-    author_name = content['pull_request']['user']['login']
+    is_merged = content.dig('pull_request', 'merged')
+    html_url = content.dig('pull_request', 'html_url') || content.dig('issue', 'html_url')
+    action_by = content.dig('pull_request', 'user', 'login') || content.dig('sender', 'login')
 
-    return false if in_black_list?(author_name)
+    return false if in_black_list?(action_by)
 
     if is_merged
       GithubComment.create(
         body: '',
         html_url: html_url,
-        author_name: author_name,
+        author_name: action_by,
         pr_url: html_url,
         state: 'merged'
       )
@@ -62,7 +62,7 @@ class CreateGithubComment
       GithubComment.create(
         body: '',
         html_url: html_url,
-        author_name: author_name,
+        author_name: action_by,
         pr_url: html_url,
         state: 'closed'
       )
