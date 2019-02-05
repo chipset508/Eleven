@@ -15,8 +15,8 @@ class CreatePullRequestService
     author_user_name = params['user_name']
 
     return unless valid_channel?(channel) && valid_user(author_user_name)
-
-    urls= URI.extract(params['text'])
+    puts params['text']
+    urls = URI.extract(params['text'])
     author_id = params['user_id']
     thread_ts = params['timestamp']
     if urls
