@@ -66,7 +66,7 @@ class SlackCommentDecoratorService
   end
 
   def assigned_action
-    "<#{github_comment.html_url}|:bookmark: #{github_comment.author_name}>"
+    "<#{github_comment.html_url}|:bust_in_silhouette: #{github_comment.author_name}>"
   end
 
   def closed_comment
