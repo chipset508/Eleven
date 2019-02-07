@@ -19,6 +19,8 @@ class SlackCommentDecoratorService
       closed_comment
     when 'reopened'
       reopened_comment
+    when 'assigned'
+      assigned_action
     else
       @subscription = comment_subscription
       normal_comment
@@ -61,6 +63,10 @@ class SlackCommentDecoratorService
 
   def reopened_comment
     "<#{github_comment.html_url}|:unlock: #{github_comment.author_name}>"
+  end
+
+  def assigned_action
+    "<#{github_comment.html_url}|:bookmark: #{github_comment.author_name}>"
   end
 
   def closed_comment

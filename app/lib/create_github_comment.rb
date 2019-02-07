@@ -21,6 +21,8 @@ class CreateGithubComment
       create_closed_comment
     when 'reopened'
       create_reopened_comment
+    when 'assigned'
+      create_assigned_action
     else
       false
     end
@@ -40,6 +42,22 @@ class CreateGithubComment
       author_name: action_by,
       pr_url: html_url,
       state: 'reopened'
+    )
+  end
+
+  def create_assigned_action
+    html_url = content.dig('issue', 'html_url')
+    assigned_by = content.dig('sender', 'login')
+    assigned_to = content.dig('assignee', 'login')
+
+    return false if in_black_list?(assigned_by)
+
+    GithubComment.create(
+      body: "Issue assigned to @#{assigned_to}",
+      html_url: html_url,
+      author_name: assigned_by,
+      pr_url: html_url,
+      state: 'assigned'
     )
   end
 
