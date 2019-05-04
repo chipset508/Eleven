@@ -1,7 +1,11 @@
 class GithubComment < ActiveRecord::Base
   def first_comment_in_thread?
     GithubComment
-      .where(thread_ts: thread_ts, author_name: author_name, state: [nil, 'commented']).count == 1
+      .where(
+        thread_ts: thread_ts,
+        author_name: author_name,
+        state: [nil, 'commented', 'changes_requested']
+      ).count == 1
   end
 
   def author_of_thread?

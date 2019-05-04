@@ -12,6 +12,7 @@ class SlackCommentDecoratorService
     when 'approved'
       approve_comment
     when 'changes_requested'
+      @subscription = comment_subscription
       change_requested_comment
     when 'merged'
       merged_comment
