@@ -64,7 +64,7 @@ class CreateGithubComment
   def create_closed_comment
     is_merged = content.dig('pull_request', 'merged')
     html_url = content.dig('pull_request', 'html_url') || content.dig('issue', 'html_url')
-    action_by = content.dig('pull_request', 'user', 'login') || content.dig('sender', 'login')
+    action_by = content.dig('sender', 'login') || content.dig('pull_request', 'user', 'login')
 
     return false if in_black_list?(action_by)
 
