@@ -1,5 +1,4 @@
 class SendSlackCommentService
-
   def self.call(comment_id)
     self.new(comment_id).call
   end
