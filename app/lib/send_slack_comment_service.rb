@@ -40,7 +40,7 @@ class SendSlackCommentService
   private
 
   def thread_deleted?(channel_id, thread_id)
-    return false if thread_id.nil?
+    return false if channel_id.nil?
 
     client = Slack::Web::Client.new
     begin
