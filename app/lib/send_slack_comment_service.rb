@@ -15,6 +15,8 @@ class SendSlackCommentService
 
     slack_comment_decorator = SlackCommentDecoratorService.new(github_comment)
 
+    return if thread_deleted?(pull_request.channel_id, pull_request.thread_ts)
+
     client = Slack::Web::Client.new
     client.chat_postMessage(
       channel: pull_request.channel,
@@ -33,5 +35,23 @@ class SendSlackCommentService
     )
 
     github_comment.update(status: true)
+  end
+
+  private
+
+  def thread_deleted?(channel_id, thread_id)
+    return false if thread_id.nil?
+
+    client = Slack::Web::Client.new
+    begin
+
+      client.conversations_replies(
+        channel: channel_id,
+        ts: thread_id
+      )
+      false
+    rescue Slack::Web::Api::Errors::SlackError
+      true
+    end
   end
 end
