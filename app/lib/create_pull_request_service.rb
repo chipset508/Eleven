@@ -12,6 +12,7 @@ class CreatePullRequestService
 
   def call
     channel = "##{params['channel_name']}"
+    channel_id = params['channel_id']
     author_user_name = params['user_name']
 
     return unless valid_channel?(channel) && valid_user(author_user_name)
@@ -30,6 +31,7 @@ class CreatePullRequestService
           author_user_name:  author_user_name,
           thread_ts: thread_ts,
           channel: channel,
+          channel_id: channel_id
           )
       end
     end
