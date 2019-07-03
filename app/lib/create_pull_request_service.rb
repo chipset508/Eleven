@@ -1,4 +1,5 @@
 class CreatePullRequestService
+  PR_REGEX = /https:\/\/github.com\/\S*\/\S*\/\S*\/[0-9]*/
 
   attr_reader :params
 
@@ -26,7 +27,7 @@ class CreatePullRequestService
         url.chomp!("/")
 
         PullRequest.create(
-          url: url.split('/files')[0],
+          url: url.match(PR_REGEX)[0],
           author_id: author_id,
           author_user_name:  author_user_name,
           thread_ts: thread_ts,
