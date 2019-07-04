@@ -1,5 +1,5 @@
 class CreatePullRequestService
-  PR_REGEX = /https:\/\/github.com\/\S*\/\S*\/\S*\/[0-9]*/
+  PR_REGEX = /https:\/\/github.com\/\S*\/\S*\/\s*(pull|issues)\/[0-9]*/
 
   attr_reader :params
 
