@@ -10,7 +10,7 @@ gem 'rake'
 gem 'slack-ruby-client'
 gem 'awesome_print', require: 'ap'
 gem 'require_all'
-
+gem 'racksh'
 group :development do
   gem 'byebug'
 end
