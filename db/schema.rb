@@ -15,12 +15,6 @@ ActiveRecord::Schema.define(version: 2019_06_09_030046) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "github_commemt", force: :cascade do |t|
-    t.string "content"
-    t.boolean "status"
-    t.string "pr_url"
-  end
-
   create_table "github_comments", force: :cascade do |t|
     t.string "body"
     t.string "html_url"

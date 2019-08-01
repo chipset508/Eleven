@@ -3,7 +3,7 @@ development:
   encoding: unicode
   port: <%= ENV["DATABASE_PORT"] || '5432' %>
   host: <%= ENV["DATABASE_HOST"] || 'localhost' %>
-  database: <%= ENV["DATABASE_NAME"] || "github-new-comment_development" %>
+  database: <%= ENV["DATABASE_NAME"] || "eleven_bot_development" %>
   pool: 5
   username: <%= ENV["DATABASE_USR"] %>
   password: <%= ENV["DATABASE_PWD"] %>
@@ -12,7 +12,7 @@ test:
   adapter: postgresql
   encoding: unicode
   port: <%= ENV["DATABASE_PORT"] || '5432' %>
-  database: github-new-comment_test<%= ENV['TEST_ENV_NUMBER'] %>
+  database: eleven_bot_test<%= ENV['TEST_ENV_NUMBER'] %>
   pool: 5
   host: <%= ENV["DATABASE_HOST"] || 'localhost' %>
   username: <%= ENV["DATABASE_USR"] %>
