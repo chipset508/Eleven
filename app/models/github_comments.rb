@@ -5,7 +5,7 @@ class GithubComment < ActiveRecord::Base
         thread_ts: thread_ts,
         author_name: author_name,
         state: [nil, 'commented', 'changes_requested']
-      ).count == 1
+      ).order(id: :asc).first == self
   end
 
   def author_of_thread?
