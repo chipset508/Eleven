@@ -13,7 +13,7 @@ COPY Gemfile Gemfile.lock ./
 RUN gem install bundler && bundle install --jobs 20 --retry 5 --without test
 
 # Set Sinatra to run in production
-ENV APP_ENV production
+ENV RACK_ENV production
 
 # Copy the main application.
 COPY . ./
