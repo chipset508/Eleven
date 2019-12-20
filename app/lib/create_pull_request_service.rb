@@ -16,7 +16,7 @@ class CreatePullRequestService
     channel_id = params['channel_id']
     author_user_name = params['user_name']
 
-    return unless valid_channel?(channel) && valid_user(author_user_name) && non_threaded?
+    return unless valid_user(author_user_name) && non_threaded?
 
     urls = URI.extract(params['text'])
     author_id = params['user_id']
@@ -46,9 +46,5 @@ class CreatePullRequestService
 
   def valid_user(user_name)
     !ENV['BLACK_LIST_SLACK_USER'].to_s.split(',').include?(user_name)
-  end
-
-  def valid_channel?(channel)
-    ENV['WHITELIST_SLACK_CHANNEL'].split(',').include?(channel)
   end
 end
