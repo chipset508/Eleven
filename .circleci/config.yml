@@ -1,0 +1,56 @@
+version: 2.1
+orbs:
+  deploy-orb: thinkei/deployment-orb@0.0.9
+jobs:
+  unit:
+    environment:
+      - DATABASE_USR: circleci
+      - DATABASE_HOST: 127.0.0.1
+      - DATABASE_PORT: 5432
+      - DATABASE_ADAPTER: postgres
+      - DATABASE_NAME: circleci
+    docker:
+      - image: ehdevops/ruby240:latest
+      - image: circleci/postgres:9.6-alpine
+        environment:
+          POSTGRES_USER: circleci
+          POSTGRES_DB: eleven_bot_test
+    working_directory: ~/eleven_bot
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - eleven_bot-bundler-{{ checksum "Gemfile.lock" }}
+            - eleven_bot-bundler
+      - run: bundle check || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without development
+      - run: mkdir -p tmp/; mkdir -p tmp/cache/
+      - save_cache:
+          key: eleven_bot-bundler-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - run: bundle exec rake db:migrate
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - deploy-orb/build-docker-image:
+          name: build_docker_image
+          context: org-global
+          working-dir: "eleven_bot"
+          filters:
+            branches:
+              only:
+                - master
+      - deploy-orb/deploy-app:
+          name: deploy_staging
+          context: org-global
+          working-dir: "eleven_bot"
+          app-name: "eleven_bot"
+          app-namespace: "staging"
+          deploy-context: "staging"
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - build_docker_image
