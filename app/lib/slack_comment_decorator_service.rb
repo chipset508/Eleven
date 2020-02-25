@@ -1,9 +1,8 @@
 class SlackCommentDecoratorService
-  attr_accessor :github_comment, :body, :subscription
+  attr_accessor :github_comment, :subscription
 
   def initialize(github_comment)
     @github_comment = github_comment
-    @body = github_comment.body
     @subscription = ''
   end
 
