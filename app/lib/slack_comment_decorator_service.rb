@@ -1,9 +1,8 @@
 class SlackCommentDecoratorService
-  attr_accessor :github_comment, :body, :subscription
+  attr_accessor :github_comment, :subscription
 
   def initialize(github_comment)
     @github_comment = github_comment
-    @body = github_comment.body
     @subscription = ''
   end
 
@@ -28,28 +27,19 @@ class SlackCommentDecoratorService
     end
   end
 
-  def mentions
-    return '' unless body.present?
-    github_mentions = body.split.uniq.select { |word| word.start_with?('@') }
-
-    github_mentions = github_mentions
-                        .map { |p| JSON.parse(ENV["USER_MAPPING"])[p.gsub(/[^@a-zA-Z0-9\-]/,"")] }
-                        .compact
-                        .uniq
-
-    github_mentions.present? ? "\n\n cc #{mention_slack_format(github_mentions)}" : ''
-  end
-
   def mention_slack_format(mentions)
     mentions.map{ |s| "<#{s}>" }.join(' ')
   end
 
   def body
-    if github_comment.body.to_s.empty?
-      github_comment.state.gsub('_', ' ').capitalize
-    else
-      github_comment.body.to_s
+    return github_comment.state.gsub('_', ' ').capitalize if github_comment.body.to_s.empty?
+
+    result = github_comment.body.to_s
+    JSON.parse(ENV["USER_MAPPING"]).each do |user_github, user_slack|
+      result = result.gsub(user_github, "<#{user_slack}>")
     end
+
+    result
   end
 
   private
