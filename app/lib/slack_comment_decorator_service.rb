@@ -45,11 +45,14 @@ class SlackCommentDecoratorService
   end
 
   def body
-    if github_comment.body.to_s.empty?
-      github_comment.state.gsub('_', ' ').capitalize
-    else
-      github_comment.body.to_s
+    return github_comment.state.gsub('_', ' ').capitalize if github_comment.body.to_s.empty?
+
+    result  = github_comment.body.to_s
+    JSON.parse(ENV["USER_MAPPING"]).each do |user_github, user_slack|
+      result = result.gsub(user_github, "<#{user_slack}>")
     end
+
+    result
   end
 
   private
