@@ -42,8 +42,6 @@ class SlackCommentDecoratorService
     result
   end
 
-  private
-
   def mentions(body)
     return '' unless body.present?
     github_mentions = body.split.uniq.select { |word| word.start_with?('@') }
@@ -53,6 +51,8 @@ class SlackCommentDecoratorService
       .compact
       .uniq
   end
+
+  private
 
   def comment_subscription
     return '' if !github_comment.first_comment_in_thread? || github_comment.author_of_thread?
