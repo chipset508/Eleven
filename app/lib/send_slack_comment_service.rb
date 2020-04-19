@@ -39,7 +39,7 @@ class SendSlackCommentService
           attachments: [
             {
               color: ColorPickerService.by_state(github_comment.state),
-              pretext: "#<#{github_comment.html_url}|:speech_balloon: #{github_comment.author_name} mentions you in a comment>",
+              pretext: "<#{github_comment.html_url}|:speech_balloon: #{github_comment.author_name} mentions you in a comment>",
               text: slack_comment_decorator.body,
               mrkdwn_in: ["pretext", "text", "fields"],
             }
@@ -55,8 +55,6 @@ class SendSlackCommentService
   private
 
   def thread_deleted?(channel_id, thread_id)
-    return false if channel_id.nil?
-
     client = Slack::Web::Client.new
     begin
 
