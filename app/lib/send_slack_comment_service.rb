@@ -15,23 +15,40 @@ class SendSlackCommentService
 
     slack_comment_decorator = SlackCommentDecoratorService.new(github_comment)
 
-    return if thread_deleted?(pull_request.channel_id, pull_request.thread_ts)
-
     client = Slack::Web::Client.new
-    client.chat_postMessage(
-      channel: pull_request.channel,
-      attachments: [
-      {
-        color: ColorPickerService.by_state(github_comment.state),
-        pretext: slack_comment_decorator.title,
-        text: slack_comment_decorator.body +
-          slack_comment_decorator.subscription,
-        mrkdwn_in: ["pretext", "text", "fields"],
-      }
-    ],
-      as_user: true,
-      thread_ts: pull_request.thread_ts
-    )
+
+    if !thread_deleted?(pull_request.channel_id, pull_request.thread_ts)
+      client.chat_postMessage(
+        channel: pull_request.channel,
+        attachments: [
+          {
+            color: ColorPickerService.by_state(github_comment.state),
+            pretext: slack_comment_decorator.title,
+            text: slack_comment_decorator.body +
+              slack_comment_decorator.subscription,
+            mrkdwn_in: ["pretext", "text", "fields"],
+          }
+        ],
+        as_user: true,
+        thread_ts: pull_request.thread_ts
+      )
+    elsif slack_comment_decorator.mentions.present?
+      slack_comment_decorator.mentions.each do |mention|
+        client.chat_postMessage(
+          channel: mention,
+          attachments: [
+            {
+              color: ColorPickerService.by_state(github_comment.state),
+              pretext: "#<#{github_comment.html_url}|:speech_balloon: #{github_comment.author_name} mentions you in a comment>",
+              text: slack_comment_decorator.body,
+              mrkdwn_in: ["pretext", "text", "fields"],
+            }
+          ],
+          as_user: true,
+          thread_ts: pull_request.thread_ts
+        )
+      end
+    end
 
     github_comment.update(status: true)
   end

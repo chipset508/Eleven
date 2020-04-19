@@ -44,6 +44,16 @@ class SlackCommentDecoratorService
 
   private
 
+  def mentions(body)
+    return '' unless body.present?
+    github_mentions = body.split.uniq.select { |word| word.start_with?('@') }
+
+    github_mentions
+      .map { |p| JSON.parse(ENV["USER_MAPPING"])[p.gsub(/[^@a-zA-Z0-9\-]/,"")] }
+      .compact
+      .uniq
+  end
+
   def comment_subscription
     return '' if !github_comment.first_comment_in_thread? || github_comment.author_of_thread?
 
