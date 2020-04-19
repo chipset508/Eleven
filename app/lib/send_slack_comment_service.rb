@@ -10,14 +10,14 @@ class SendSlackCommentService
   def call
     github_comment = GithubComment.find_by(id: @comment_id)
     pull_request = PullRequest.where(url: github_comment.try(:pr_url)).last
-    return false unless github_comment && pull_request
-    github_comment.update(thread_ts: pull_request.thread_ts)
+    return false unless github_comment
+    github_comment.update(thread_ts: pull_request&.thread_ts)
 
     slack_comment_decorator = SlackCommentDecoratorService.new(github_comment)
 
     client = Slack::Web::Client.new
 
-    if !thread_deleted?(pull_request.channel_id, pull_request.thread_ts)
+    if pull_request.present? && !thread_deleted?(pull_request.channel_id, pull_request.thread_ts)
       client.chat_postMessage(
         channel: pull_request.channel,
         attachments: [
@@ -55,8 +55,6 @@ class SendSlackCommentService
   private
 
   def thread_deleted?(channel_id, thread_id)
-    return true if channel_id.nil?
-
     client = Slack::Web::Client.new
     begin
 
