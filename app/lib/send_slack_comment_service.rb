@@ -44,8 +44,7 @@ class SendSlackCommentService
               mrkdwn_in: ["pretext", "text", "fields"],
             }
           ],
-          as_user: true,
-          thread_ts: pull_request.thread_ts
+          as_user: true
         )
       end
     end
