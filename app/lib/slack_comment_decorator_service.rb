@@ -42,9 +42,9 @@ class SlackCommentDecoratorService
     result
   end
 
-  def mentions(body)
-    return '' unless body.present?
-    github_mentions = body.split.uniq.select { |word| word.start_with?('@') }
+  def mentions
+    return '' unless ithub_comment.body.present?
+    github_mentions = ithub_comment.body.split.uniq.select { |word| word.start_with?('@') }
 
     github_mentions
       .map { |p| JSON.parse(ENV["USER_MAPPING"])[p.gsub(/[^@a-zA-Z0-9\-]/,"")] }
