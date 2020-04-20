@@ -34,18 +34,21 @@ class SendSlackCommentService
       )
     elsif slack_comment_decorator.mentions.present?
       slack_comment_decorator.mentions.each do |mention|
-        client.chat_postMessage(
-          channel: mention,
-          attachments: [
-            {
-              color: ColorPickerService.by_state(github_comment.state),
-              pretext: "<#{github_comment.html_url}|:speech_balloon: Mention from #{github_comment.author_name}>",
-              text: slack_comment_decorator.body,
-              mrkdwn_in: ["pretext", "text", "fields"],
-            }
-          ],
-          as_user: true
-        )
+        begin
+          client.chat_postMessage(
+            channel: mention,
+            attachments: [
+              {
+                color: ColorPickerService.by_state(github_comment.state),
+                pretext: "<#{github_comment.html_url}|:speech_balloon: Mention from #{github_comment.author_name}>",
+                text: slack_comment_decorator.body,
+                mrkdwn_in: ["pretext", "text", "fields"],
+              }
+            ],
+            as_user: true
+          )
+        rescue
+        end
       end
     end
 
