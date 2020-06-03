@@ -46,7 +46,7 @@ class CreateGithubComment
   end
 
   def create_assigned_action
-    html_url = content.dig('issue', 'html_url')
+    html_url = content.dig('issue', 'html_url') || content.dig('pull_request', 'html_url')
     assigned_by = content.dig('sender', 'login')
     assigned_to = content.dig('assignee', 'login')
 
