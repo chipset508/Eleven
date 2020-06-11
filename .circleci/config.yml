@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  deploy-orb: thinkei/deployment-orb@0.0.9
+  deploy-orb: thinkei/deployment-orb@0.0.12
 jobs:
   unit:
     environment:
@@ -10,25 +10,25 @@ jobs:
       - DATABASE_ADAPTER: postgres
       - DATABASE_NAME: circleci
     docker:
-      - image: ehdevops/ruby240:latest
+      - image: ehdevops/ruby260-without-browser:latest
       - image: circleci/postgres:9.6-alpine
         environment:
           POSTGRES_USER: circleci
           POSTGRES_DB: eleven_bot_test
-    working_directory: ~/eleven_bot
+    working_directory: ~/app
     steps:
       - checkout
       - restore_cache:
           keys:
-            - eleven_bot-bundler-{{ checksum "Gemfile.lock" }}
-            - eleven_bot-bundler
-      - run: bundle check || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without development
+            - bundler-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --path=vendor/bundle
       - run: mkdir -p tmp/; mkdir -p tmp/cache/
       - save_cache:
-          key: eleven_bot-bundler-{{ checksum "Gemfile.lock" }}
+          key: bundler-{{ checksum "Gemfile.lock" }}
           paths:
-            - vendor/bundle
-      - run: bundle exec rake db:migrate
+            - ~/app/vendor/bundle
+      - run: bundle exec rake db:create
+      - run: bundle exec rake db:schema:load
 workflows:
   version: 2
   build_and_deploy:
@@ -36,7 +36,7 @@ workflows:
       - deploy-orb/build-docker-image:
           name: build_docker_image
           context: org-global
-          working-dir: "eleven_bot"
+          working-dir: "app"
           filters:
             branches:
               only:
@@ -44,7 +44,7 @@ workflows:
       - deploy-orb/deploy-app:
           name: deploy_staging
           context: org-global
-          working-dir: "eleven_bot"
+          working-dir: "app"
           app-name: "eleven_bot"
           app-namespace: "staging"
           deploy-context: "staging"
@@ -53,4 +53,4 @@ workflows:
               only:
                 - master
           requires:
-            - build_docker_image
+            - build_docker_image_with_sidekiqpro
