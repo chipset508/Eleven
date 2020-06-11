@@ -21,3 +21,11 @@ post '/new_comment' do
 
   status 201
 end
+
+get '/healthz' do
+  if ActiveRecord::Base.connection.active?
+    status 200
+  else
+    status 503
+  end
+end

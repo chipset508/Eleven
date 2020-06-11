@@ -1,0 +1,56 @@
+version: 2.1
+orbs:
+  deploy-orb: thinkei/deployment-orb@0.0.12
+jobs:
+  unit:
+    environment:
+      - DATABASE_USR: circleci
+      - DATABASE_HOST: 127.0.0.1
+      - DATABASE_PORT: 5432
+      - DATABASE_ADAPTER: postgres
+      - DATABASE_NAME: circleci
+    docker:
+      - image: ehdevops/ruby260-without-browser:latest
+      - image: circleci/postgres:9.6-alpine
+        environment:
+          POSTGRES_USER: circleci
+          POSTGRES_DB: eleven_bot_test
+    working_directory: ~/app
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - bundler-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --path=vendor/bundle
+      - run: mkdir -p tmp/; mkdir -p tmp/cache/
+      - save_cache:
+          key: bundler-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ~/app/vendor/bundle
+      - run: bundle exec rake db:create
+      - run: bundle exec rake db:schema:load
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - deploy-orb/build-docker-image:
+          name: build_docker_image
+          context: org-global
+          working-dir: "app"
+          filters:
+            branches:
+              only:
+                - master
+      - deploy-orb/deploy-app:
+          name: deploy_staging
+          context: org-global
+          working-dir: "app"
+          app-name: "eleven-bot"
+          app-namespace: "staging"
+          deploy-context: "staging"
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - build_docker_image
