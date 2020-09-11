@@ -9,7 +9,7 @@ class SendSlackCommentService
 
   def call
     github_comment = GithubComment.find_by(id: @comment_id)
-    pull_request = PullRequest.where(url: github_comment.try(:pr_url)).last
+    pull_request = PullRequest.where("lower(url) = ?", github_comment.try(:pr_url).downcase).last
     return false unless github_comment
     github_comment.update(thread_ts: pull_request&.thread_ts)
 
