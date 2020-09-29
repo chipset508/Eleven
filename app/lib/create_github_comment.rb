@@ -23,6 +23,8 @@ class CreateGithubComment
       create_reopened_comment
     when 'assigned'
       create_assigned_action
+    when 'review_requested'
+      create_review_requested
     else
       false
     end
@@ -59,6 +61,24 @@ class CreateGithubComment
       pr_url: html_url,
       state: 'assigned'
     )
+  end
+
+  def create_review_requested
+    author_name = content.dig('pull_request', 'user', 'login')
+    pr_url = content.dig('pull_request', 'html_url')
+    requested_reviewer = content.dig('pull_request', 'requested_reviewers', 'login')
+
+    return false if in_black_list?(requested_reviewer)
+
+    if requested_reviewer.present? && !in_black_list?(author_name)
+      GithubComment.create(
+        body: "Requested review from #{requested_reviewer}",
+        html_url: pr_url,
+        author_name: author_name,
+        pr_url: pr_url,
+        state: 'review_requested'
+      )
+    end
   end
 
   def create_closed_comment
