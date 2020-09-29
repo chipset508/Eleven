@@ -21,6 +21,8 @@ class SlackCommentDecoratorService
       reopened_comment
     when 'assigned'
       assigned_action
+    when 'review_requested'
+      review_requested_comment
     else
       @subscription = comment_subscription
       normal_comment
@@ -89,5 +91,9 @@ class SlackCommentDecoratorService
 
   def normal_comment
     "<#{github_comment.html_url}|:speech_balloon: #{github_comment.author_name}>"
+  end
+
+  def review_requested_comment
+    "<#{github_comment.html_url}|:eye-in-speech-bubble: #{github_comment.author_name}>"
   end
 end
