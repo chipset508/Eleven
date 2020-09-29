@@ -66,7 +66,7 @@ class CreateGithubComment
   def create_review_requested
     author_name = content.dig('pull_request', 'user', 'login')
     pr_url = content.dig('pull_request', 'html_url')
-    requested_reviewer = content.dig('requested_reviewers', 'login')
+    requested_reviewer = content.dig('requested_reviewer', 'login')
 
     if requested_reviewer.present? && !in_black_list?(author_name)
       GithubComment.create(
