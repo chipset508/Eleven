@@ -70,7 +70,7 @@ class CreateGithubComment
 
     if requested_reviewer.present? && !in_black_list?(author_name)
       GithubComment.create(
-        body: "Requested review from #{requested_reviewer}",
+        body: "Requested review from @#{requested_reviewer}",
         html_url: pr_url,
         author_name: author_name,
         pr_url: pr_url,
